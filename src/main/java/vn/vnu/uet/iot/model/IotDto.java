@@ -5,6 +5,10 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Time;
+import java.time.Instant;
+import java.time.LocalDateTime;
+
 @Data
 @Getter
 @Setter
@@ -17,4 +21,6 @@ public class IotDto {
     private String t2;
 
     private String p;
+
+    private String time;
 }

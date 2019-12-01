@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -32,5 +34,5 @@ public class Iot {
 
     @Column(name = "created_on")
     @CreationTimestamp
-    private Instant createdOn;
+    private LocalDateTime createdOn;
 }
