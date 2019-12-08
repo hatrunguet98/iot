@@ -33,6 +33,5 @@ public class Iot {
     private String p;
 
     @Column(name = "created_on")
-    @CreationTimestamp
-    private LocalDateTime createdOn;
+    private Long createdOn;
 }

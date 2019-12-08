@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class IotDto {
-    private String t1;
+    private String hour;
+
+    private String Dht22;
+
+    private String Gy68;
 
     private String h;
 
-    private String t2;
-
     private String p;
-
-    private String time;
 }
