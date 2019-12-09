@@ -40,7 +40,7 @@ public class IotServiceImpl implements IotService
         iot.setT2(t2);
         iot.setH(h);
         iot.setP(p);
-        iot.setCreatedOn(System.currentTimeMillis()/1000);
+        iot.setCreatedOn(System.currentTimeMillis()/1000 + 7* 3600);
         return iotRepository.save(iot);
     }
 
@@ -51,8 +51,8 @@ public class IotServiceImpl implements IotService
 
     @Override
     public IotResponse getData() {
-
-        Long time = LocalDate.now().toEpochDay()*86400;
+        LocalDate date = new Date(System.currentTimeMillis()+7*3600*1000).toLocalDate();
+        Long time = date.toEpochDay()*86400;
         List<Iot> iotList = iotRepository.getByDate(time, time + 86400);
         Map<Long, List<Iot>> mapData = new HashMap<>();
 
@@ -66,6 +66,37 @@ public class IotServiceImpl implements IotService
             Long t = (iot.getCreatedOn() - time)/3600 + 1;
             mapData.get(t).add(iot);
         }
-        return null;
+
+        IotResponse iotResponse = new IotResponse();
+        iotResponse.setDate(date);
+        mapData.forEach((k,value) -> {
+            Float dht22 = 0F;
+            Float gy66 = 0F;
+            Float h = 0F;
+            Float p = 0F;
+            int size = value.size();
+            if(size > 0) {
+                for (Iot i : value) {
+                    dht22 += Float.parseFloat(i.getT1());
+                    gy66 += Float.parseFloat(i.getT2());
+                    h += Float.parseFloat(i.getH());
+                    p += Float.parseFloat(i.getP());
+                }
+                dht22 /= size;
+                gy66 /= size;
+                h /= size;
+                p /= size;
+            }
+
+            IotDto iotDto = IotDto.builder()
+                    .hour(k.toString())
+                    .Dht22(dht22.toString())
+                    .Gy68(gy66.toString())
+                    .h(h.toString())
+                    .p(p.toString())
+                    .build();
+            iotResponse.getIndex().add(iotDto);
+        });
+        return iotResponse;
     }
 }
