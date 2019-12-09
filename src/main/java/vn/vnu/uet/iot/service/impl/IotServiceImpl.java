@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import vn.vnu.uet.iot.model.Iot;
 import vn.vnu.uet.iot.model.IotDto;
 import vn.vnu.uet.iot.model.IotResponse;
+import vn.vnu.uet.iot.model.IotResponseFirst;
 import vn.vnu.uet.iot.repository.IotRepository;
 import vn.vnu.uet.iot.service.IotService;
 
@@ -45,8 +46,15 @@ public class IotServiceImpl implements IotService
     }
 
     @Override
-    public IotDto getFirst() {
-        return null;
+    public IotResponseFirst getFirst() {
+        Iot iot = iotRepository.getfist();
+        Instant time = Instant.ofEpochSecond(iot.getCreatedOn());
+        return IotResponseFirst.builder().t1(iot.getT1())
+                .t2(iot.getT2())
+                .h(iot.getH())
+                .p(iot.getP())
+                .time(time)
+                .build();
     }
 
     @Override

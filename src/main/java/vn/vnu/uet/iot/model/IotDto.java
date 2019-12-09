@@ -1,5 +1,6 @@
 package vn.vnu.uet.iot.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -16,8 +17,10 @@ import java.time.LocalDateTime;
 public class IotDto {
     private String hour;
 
+    @JsonProperty("DHT-22")
     private String Dht22;
 
+    @JsonProperty("GY-68")
     private String Gy68;
 
     private String h;
