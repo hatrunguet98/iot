@@ -23,8 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class IotServiceImpl implements IotService
-{
+public class IotServiceImpl implements IotService {
     @Autowired
     private IotRepository iotRepository;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -41,7 +40,7 @@ public class IotServiceImpl implements IotService
         iot.setT2(t2);
         iot.setH(h);
         iot.setP(p);
-        iot.setCreatedOn(System.currentTimeMillis()/1000 + 7* 3600);
+        iot.setCreatedOn(System.currentTimeMillis() / 1000 + 7 * 3600);
         return iotRepository.save(iot);
     }
 
@@ -59,31 +58,31 @@ public class IotServiceImpl implements IotService
 
     @Override
     public IotResponse getData() {
-        LocalDate date = new Date(System.currentTimeMillis()+7*3600*1000).toLocalDate();
-        Long time = date.toEpochDay()*86400;
+        LocalDate date = new Date(System.currentTimeMillis() + 7 * 3600 * 1000).toLocalDate();
+        Long time = date.toEpochDay() * 86400;
         List<Iot> iotList = iotRepository.getByDate(time, time + 86400);
         Map<Long, List<Iot>> mapData = new HashMap<>();
 
-        for (long i = 1; i <= 24; i++){
+        for (long i = 1; i <= 24; i++) {
             mapData.put(i, new ArrayList<>());
         }
 
         int hour = 1;
 
-        for (Iot iot: iotList) {
-            Long t = (iot.getCreatedOn() - time)/3600 + 1;
+        for (Iot iot : iotList) {
+            Long t = (iot.getCreatedOn() - time) / 3600 + 1;
             mapData.get(t).add(iot);
         }
 
         IotResponse iotResponse = new IotResponse();
         iotResponse.setDate(date);
-        mapData.forEach((k,value) -> {
+        mapData.forEach((k, value) -> {
             Float dht22 = 0F;
             Float gy66 = 0F;
             Float h = 0F;
             Float p = 0F;
             int size = value.size();
-            if(size > 0) {
+            if (size > 0) {
                 for (Iot i : value) {
                     dht22 += Float.parseFloat(i.getT1());
                     gy66 += Float.parseFloat(i.getT2());
@@ -106,5 +105,21 @@ public class IotServiceImpl implements IotService
             iotResponse.getIndex().add(iotDto);
         });
         return iotResponse;
+    }
+
+    @Override
+    public List<IotResponseFirst> getTop10() {
+        List<Iot> iots = iotRepository.getTop10();
+        List<IotResponseFirst> iotResponseFirsts = new ArrayList<>();
+        for (Iot iot: iots) {
+            Instant time = Instant.ofEpochSecond(iot.getCreatedOn());
+            iotResponseFirsts.add(IotResponseFirst.builder().t1(iot.getT1())
+                    .t2(iot.getT2())
+                    .h(iot.getH())
+                    .p(iot.getP())
+                    .time(time)
+                    .build());
+        }
+        return iotResponseFirsts;
     }
 }

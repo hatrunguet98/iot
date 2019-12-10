@@ -13,4 +13,6 @@ public interface IotService {
     IotResponseFirst getFirst();
 
     IotResponse getData();
+
+    List<IotResponseFirst> getTop10();
 }

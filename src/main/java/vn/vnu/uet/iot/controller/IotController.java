@@ -32,4 +32,9 @@ public class IotController {
     public IotResponseFirst getData(){
         return iotService.getFirst();
     }
+
+    @GetMapping("new10")
+    public List<IotResponseFirst> getTop10(){
+        return iotService.getTop10();
+    }
 }
