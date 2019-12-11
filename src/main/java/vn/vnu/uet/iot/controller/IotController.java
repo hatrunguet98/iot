@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import vn.vnu.uet.iot.model.Iot;
 import vn.vnu.uet.iot.model.IotDto;
+import vn.vnu.uet.iot.model.IotResponse;
+import vn.vnu.uet.iot.model.IotResponseFirst;
 import vn.vnu.uet.iot.service.IotService;
 
 import java.util.List;
@@ -22,12 +24,18 @@ public class IotController {
     }
 
     @GetMapping("/list")
-    public List<IotDto> getListData(){
-        return iotService.getAll();
+    public IotResponse getListData(){
+        return iotService.getData();
     }
 
     @GetMapping("/new")
-    public IotDto getData(){
+    public IotResponseFirst getData(){
         return iotService.getFirst();
+    }
+
+    @GetMapping("/checkError")
+    public String checkError(){
+        iotService.checkError();
+        return "success";
     }
 }
