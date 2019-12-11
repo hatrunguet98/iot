@@ -2,12 +2,14 @@ package vn.vnu.uet.iot.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import vn.vnu.uet.iot.model.Iot;
 import vn.vnu.uet.iot.model.IotDto;
 import vn.vnu.uet.iot.model.IotResponse;
 import vn.vnu.uet.iot.model.IotResponseFirst;
 import vn.vnu.uet.iot.repository.IotRepository;
 import vn.vnu.uet.iot.service.IotService;
+import vn.vnu.uet.iot.service.email.SendEmailService;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -24,9 +26,13 @@ import java.util.Map;
 
 @Service
 public class IotServiceImpl implements IotService {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     @Autowired
     private IotRepository iotRepository;
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    @Autowired
+    private SendEmailService sendEmailService;
 
     @Override
     public List<IotDto> getAll() {
@@ -107,6 +113,27 @@ public class IotServiceImpl implements IotService {
         return iotResponse;
     }
 
+    @Override
+    public void checkError() {
+        Long time = System.currentTimeMillis() / 1000 + 7 * 3600;
+        List<Iot> iots = iotRepository.getByDate(time - 3600, time);
+        Integer countError1 = 0;
+        Integer countError2 = 0;
+
+        for (Iot iot : iots) {
+            if (StringUtils.isEmpty(iot.getT1()) || StringUtils.isEmpty(iot.getH()) || iot.getH().equals("0")) {
+                countError1++;
+            }
+            if (StringUtils.isEmpty(iot.getT2()) || StringUtils.isEmpty(iot.getP())|| iot.getP().equals("0")) {
+                countError2++;
+            }
+        }
+
+        if (countError1 > 9 || countError2 > 9) {
+            sendEmailService.senEmailReport(countError1, countError2);
+        }
+        System.out.println("run check error" + countError1 + countError2);
+      }
     @Override
     public List<IotResponseFirst> getTop10() {
         List<Iot> iots = iotRepository.getTop10();

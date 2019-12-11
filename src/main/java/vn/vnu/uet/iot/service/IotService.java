@@ -11,8 +11,7 @@ public interface IotService {
     List<IotDto> getAll();
     Iot save(String t1, String t2, String p, String h);
     IotResponseFirst getFirst();
-
     IotResponse getData();
-
+    void checkError();
     List<IotResponseFirst> getTop10();
 }

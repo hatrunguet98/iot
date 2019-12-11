@@ -33,6 +33,12 @@ public class IotController {
         return iotService.getFirst();
     }
 
+    @GetMapping("/checkError")
+    public String checkError(){
+        iotService.checkError();
+        return "success";
+    }
+  
     @GetMapping("new10")
     public List<IotResponseFirst> getTop10(){
         return iotService.getTop10();
