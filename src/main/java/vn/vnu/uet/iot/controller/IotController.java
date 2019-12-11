@@ -38,4 +38,9 @@ public class IotController {
         iotService.checkError();
         return "success";
     }
+  
+    @GetMapping("new10")
+    public List<IotResponseFirst> getTop10(){
+        return iotService.getTop10();
+    }
 }

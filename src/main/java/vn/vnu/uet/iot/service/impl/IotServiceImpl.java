@@ -133,5 +133,20 @@ public class IotServiceImpl implements IotService {
             sendEmailService.senEmailReport(countError1, countError2);
         }
         System.out.println("run check error" + countError1 + countError2);
+      }
+    @Override
+    public List<IotResponseFirst> getTop10() {
+        List<Iot> iots = iotRepository.getTop10();
+        List<IotResponseFirst> iotResponseFirsts = new ArrayList<>();
+        for (Iot iot: iots) {
+            Instant time = Instant.ofEpochSecond(iot.getCreatedOn());
+            iotResponseFirsts.add(IotResponseFirst.builder().t1(iot.getT1())
+                    .t2(iot.getT2())
+                    .h(iot.getH())
+                    .p(iot.getP())
+                    .time(time)
+                    .build());
+        }
+        return iotResponseFirsts;
     }
 }
