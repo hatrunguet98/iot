@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import vn.vnu.uet.iot.model.Iot;
 import vn.vnu.uet.iot.model.IotResponse;
 import vn.vnu.uet.iot.model.IotResponseFirst;
+import vn.vnu.uet.iot.repository.IotRepository;
 import vn.vnu.uet.iot.service.IotService;
 
 import java.io.IOException;
@@ -24,6 +25,9 @@ import java.util.List;
 public class IotController {
     @Autowired
     private IotService iotService;
+
+    @Autowired
+    private IotRepository iotRepository;
 
     @GetMapping
     public String senserInsert(@RequestParam String t1, @RequestParam String t2, @RequestParam String h, @RequestParam String p){
@@ -65,13 +69,19 @@ public class IotController {
         List<Iot> data = new ArrayList<>();
         XSSFWorkbook workbook = new XSSFWorkbook(reapExcelDataFile.getInputStream());
         XSSFSheet worksheet = workbook.getSheetAt(0);
-
+        List<Iot> iots = new ArrayList<>();
+        int count = 0;
         for(int i=1;i<worksheet.getPhysicalNumberOfRows() ;i++) {
-            Iot ioit = new Iot();
-
             XSSFRow row = worksheet.getRow(i);
-            getDataRow(row);
+            Iot iot =  getDataRow(row);
+            if (iot != null) {
+                iots.add(iot);
+            } else {
+                count ++;
+            }
         }
+        System.out.println(count);
+        iotRepository.saveAll(iots);
         return "success";
     }
 
