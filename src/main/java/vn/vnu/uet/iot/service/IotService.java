@@ -14,4 +14,5 @@ public interface IotService {
     IotResponse getData();
     void checkError();
     List<IotResponseFirst> getTop10();
+    IotResponse getDataByDate(String day);
 }

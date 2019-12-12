@@ -28,6 +28,11 @@ public class IotController {
         return iotService.getData();
     }
 
+    @GetMapping("/list{date}")
+    public IotResponse getDataByDate(@PathVariable String date) {
+        return iotService.getDataByDate(date);
+    }
+
     @GetMapping("/new")
     public IotResponseFirst getData(){
         return iotService.getFirst();
