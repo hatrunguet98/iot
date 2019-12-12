@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,8 +42,8 @@ public class IotController {
         return iotService.getData();
     }
 
-    @GetMapping("/list{date}")
-    public IotResponse getDataByDate(@PathVariable String date) {
+    @GetMapping("/date")
+    public IotResponse getDataByDate(@RequestParam String date) {
         return iotService.getDataByDate(date);
     }
 
@@ -62,7 +63,7 @@ public class IotController {
         return iotService.getTop10();
     }
 
-    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
 
     @PostMapping("/import")
     public String importData(@RequestParam("file")MultipartFile reapExcelDataFile) throws IOException {
@@ -93,10 +94,13 @@ public class IotController {
             String h = getCell(row.getCell(2));
             String t2 = getCell(row.getCell(3));
             String p = getCell(row.getCell(4));
-
+            if (time.substring(11,13).equals("12")){
+                time += " PM";
+            } else {
+                time += " AM";
+            }
             Date date = format.parse(time);
-            System.out.println(date);
-            Long t = date.getTime();
+            Long t = date.getTime()/1000;
             iot.setCreatedOn(t);
             iot.setH(h);
             iot.setT1(t1);
@@ -105,7 +109,6 @@ public class IotController {
         }catch (Exception e){
             return null;
         }
-        System.out.println(iot);
         return iot;
     }
 
