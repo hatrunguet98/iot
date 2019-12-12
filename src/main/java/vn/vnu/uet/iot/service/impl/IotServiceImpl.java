@@ -126,7 +126,7 @@ public class IotServiceImpl implements IotService {
         }
 
         if (countError1 > 9 || countError2 > 9) {
-            sendEmailService.senEmailReport(countError1, countError2);
+            //sendEmailService.senEmailReport();
         }
         System.out.println("run check error" + countError1 + countError2);
     }

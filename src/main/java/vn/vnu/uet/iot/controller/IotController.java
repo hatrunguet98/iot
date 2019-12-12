@@ -14,6 +14,7 @@ import vn.vnu.uet.iot.model.IotResponse;
 import vn.vnu.uet.iot.model.IotResponseFirst;
 import vn.vnu.uet.iot.repository.IotRepository;
 import vn.vnu.uet.iot.service.IotService;
+import vn.vnu.uet.iot.service.email.SendEmailService;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -30,9 +31,20 @@ public class IotController {
     @Autowired
     private IotRepository iotRepository;
 
+    @Autowired
+    private SendEmailService sendEmailService;
+
+    int count = 0;
+
     @GetMapping
     public String senserInsert(@RequestParam String t1, @RequestParam String t2, @RequestParam String h, @RequestParam String p){
         System.out.println(t1 +" " + t2 +" "+ h +" " + p);
+        if(t1.equals("0")){
+            count++;
+        } else {
+            count = 0;
+        }
+        if(count == 10) sendEmailService.senEmailReport();
         Iot iot = iotService.save(t1,t2,p,h);
         return "success";
     }
@@ -122,7 +134,6 @@ public class IotController {
             return cellData.toString();
         } else {
             return "";
-
         }
     }
 }

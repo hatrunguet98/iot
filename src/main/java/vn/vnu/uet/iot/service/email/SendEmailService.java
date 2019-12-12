@@ -20,9 +20,9 @@ public class SendEmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void senEmailReport(Integer countError1, Integer countError2) {
+    public void senEmailReport() {
         String subject = "Invite User";
-        sendEmail(this.createdContentReport(countError1, countError2), subject);
+        sendEmail(this.createdContentReport(), subject);
     }
 
     private void sendEmail(String content, String subject) {
@@ -42,15 +42,10 @@ public class SendEmailService {
         }
     }
 
-    private String createdContentReport(Integer countError1, Integer countError2) {
+    private String createdContentReport() {
         String error1 = "";
         String error2 = "";
-        if (countError1 > 10) {
-            error1 = "\t<p>" + "Thiết bị GY-68 đã lỗi " + countError1 + " lần trong 1 giờ qua" + "</p>\n";
-        }
-        if (countError1 > 10) {
-            error2 = "\t<p>" + "Thiết bị DHT-22 đã lỗi " + countError2 + " lần trong 1 giờ qua" + "</p>\n";
-        }
+
         String invitation = "\"<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<head>\n" +
